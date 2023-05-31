@@ -24,4 +24,9 @@ public class MapsController {
     public Address save(@RequestParam Long vehicleId, @RequestParam Double lat, @RequestParam Double lon) {
         return mapsService.saveAddress(vehicleId, lat, lon);
     }
+
+    @DeleteMapping
+    public void delete(@RequestParam Long vehicleId) {
+        mapsService.deleteAddress(vehicleId);
+    }
 }

@@ -31,4 +31,13 @@ public class MapsService {
         }
         return optionalAddress.get();
     }
+
+    public void deleteAddress(Long vehicleId) {
+        Optional<Address> optionalAddress = mapsRepository.findByVehicleId(vehicleId);
+        if (optionalAddress.isEmpty()) {
+            throw new AddressNotFound("Address not found for vehicle ".concat(vehicleId.toString()));
+        }
+        Address address = optionalAddress.get();
+        mapsRepository.delete(address);
+    }
 }

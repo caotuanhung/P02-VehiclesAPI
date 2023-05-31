@@ -74,4 +74,21 @@ public class MapsClient {
             return car.getLocation();
         }
     }
+
+    public void deleteAddress(Long vehicleId) {
+        try {
+            client
+                    .delete()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/maps")
+                            .queryParam("vehicleId", vehicleId)
+                            .build()
+                    )
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (Exception e) {
+            log.error("Unexpected error deleting address for vehicle {}", vehicleId, e);
+        }
+    }
 }

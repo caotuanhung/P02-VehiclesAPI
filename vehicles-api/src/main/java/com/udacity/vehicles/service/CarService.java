@@ -114,6 +114,7 @@ public class CarService {
 
         Car car = optionalCar.get();
         priceService.deletePrice(car.getId());
+        mapsClient.deleteAddress(car.getId());
         repository.delete(car);
     }
 }
