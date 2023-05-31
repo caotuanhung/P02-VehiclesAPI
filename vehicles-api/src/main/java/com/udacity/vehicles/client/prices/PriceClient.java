@@ -2,8 +2,10 @@ package com.udacity.vehicles.client.prices;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 /**
  * Implements a class to interface with the Pricing Client for price data.
@@ -15,7 +17,7 @@ public class PriceClient {
 
     private final WebClient client;
 
-    public PriceClient(WebClient pricing) {
+    public PriceClient(@Qualifier("pricing") WebClient pricing) {
         this.client = pricing;
     }
 
@@ -35,7 +37,7 @@ public class PriceClient {
             Price price = client
                     .get()
                     .uri(uriBuilder -> uriBuilder
-                            .path("services/price/")
+                            .path("prices/search/find-by-vehicle-id")
                             .queryParam("vehicleId", vehicleId)
                             .build()
                     )
@@ -47,5 +49,34 @@ public class PriceClient {
             log.error("Unexpected error retrieving price for vehicle {}", vehicleId, e);
         }
         return "(consult price)";
+    }
+
+    public Price savePrice(Price price) {
+        try {
+            Price foundPrice = client
+                    .post()
+                    .uri("/prices")
+                    .body(Mono.just(price), Price.class)
+                    .retrieve()
+                    .bodyToMono(Price.class)
+                    .block();
+            return foundPrice;
+        } catch (Exception e) {
+            log.error("Unexpected error saving price for vehicle {}", price.getVehicleId(), e);
+        }
+        return null;
+    }
+
+    public void deletePrice(Long vehicleId) {
+        try {
+            client
+                    .delete()
+                    .uri("/prices/".concat(vehicleId.toString()))
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (Exception e) {
+            log.error("Unexpected error deleting price for vehicle {}", vehicleId, e);
+        }
     }
 }

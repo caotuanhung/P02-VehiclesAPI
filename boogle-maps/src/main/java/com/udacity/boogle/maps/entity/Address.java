@@ -1,23 +1,36 @@
-package com.udacity.boogle.maps;
+package com.udacity.boogle.maps.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
  * Declares a class to store an address, city, state and zip code.
  */
+@Entity
 public class Address {
-
+    @Id
+    @Column(name = "vehicle_id")
+    private Long vehicleId;
     private String address;
     private String city;
     private String state;
     private String zip;
-
     public Address() {
     }
-
     public Address(String address, String city, String state, String zip) {
         this.address = address;
         this.city = city;
         this.state = state;
         this.zip = zip;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 
     public String getAddress() {
