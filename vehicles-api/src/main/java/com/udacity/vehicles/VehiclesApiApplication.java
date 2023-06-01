@@ -1,8 +1,11 @@
 package com.udacity.vehicles;
 
+import com.udacity.vehicles.domain.manufacturer.Manufacturer;
+import com.udacity.vehicles.domain.manufacturer.ManufacturerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.ServiceInstance;
@@ -25,6 +28,23 @@ public class VehiclesApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(VehiclesApiApplication.class, args);
+    }
+
+    /**
+     * Initializes the car manufacturers available to the Vehicle API.
+     *
+     * @param repository where the manufacturer information persists.
+     * @return the car manufacturers to add to the related repository
+     */
+    @Bean
+    CommandLineRunner initDatabase(ManufacturerRepository repository) {
+        return args -> {
+            repository.save(new Manufacturer(100, "Audi"));
+            repository.save(new Manufacturer(101, "Chevrolet"));
+            repository.save(new Manufacturer(102, "Ford"));
+            repository.save(new Manufacturer(103, "BMW"));
+            repository.save(new Manufacturer(104, "Dodge"));
+        };
     }
 
     @Bean
